@@ -2,17 +2,17 @@ import { TbUserSquareRounded } from "react-icons/tb";
 import Sidebar, { SidebarItem } from "../components/Sidebar";
 import help from "../assets/images/help.png";
 
-import Wave from "../assets/images/wave.png";
+// import Wave from "../assets/images/wave.png";
 import { CiSearch } from "react-icons/ci";
 import Header from "../components/Header";
-import Stats1 from "../assets/images/Stats1.png";
+// import Stats1 from "../assets/images/Stats1.png";
 
-import Stats2 from "../assets/images/Stats2.png";
-import Stats3 from "../assets/images/Stats3.png";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
+// import Stats2 from "../assets/images/Stats2.png";
+// import Stats3 from "../assets/images/Stats3.png";
+// import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import Status from "../components/Status";
 import Tables from "../components/Tables";
-import Pagination from "../components/Pagination";
+// import Pagination from "../components/Pagination";
 import { useState } from "react";
 
 function Dashboard() {
