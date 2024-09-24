@@ -13,8 +13,24 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import Status from "../components/Status";
 import Tables from "../components/Tables";
 import Pagination from "../components/Pagination";
+import { useState } from "react";
 
 function Dashboard() {
+ const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    
+    if (term) {
+      fetch(`https://dummyjson.com/users/search?q=${term}`)
+        .then(res => res.json())
+        .then(data => setSearchResults(data.users || []));
+    } else {
+      setSearchResults([]);
+    }
+  };
   return (
     <div className="flex flex-row">
       <div className="flex">
@@ -41,21 +57,30 @@ function Dashboard() {
               <div className="w-[230px] relative p-2 flex flex-row bg-[#f9fbff] rounded-lg items-center gap-4 ">
                 <CiSearch className="absolute text-2xl" />
                 <input
-                  placeholder="Search "
-                  className="ml-8 border-none outline-none bg-[#f9fbff]"
+                   value={searchTerm}
+                   onChange={handleSearch}
+                   placeholder="Search "
+                   className="ml-8 border-none outline-none bg-[#f9fbff]"
                 />
               </div>
 
               <div className="w-[160px] relative p-2 flex flex-row bg-[#f9fbff] rounded-lg items-center  ">
-                <p className="text-sm">Sort by :</p>
+                <p className="text-sm w-[50px]">Sort by :</p>
                 <select className="ml-2 border-none outline-none bg-[#f9fbff] font-bold">
-                  <option>Newest</option>
+                  <option>admin</option>
+                  <option>moderator</option>
+                  <option>user</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <Tables />
+          {searchResults.length > 0 ? (
+            <Tables data={searchResults} />
+          ) : (
+            <Tables />
+          )}
+            {/* <Tables /> */}
           {/* <Pagination /> */}
         </div>
       </div>

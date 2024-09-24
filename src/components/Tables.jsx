@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
+import Pagination from "./Pagination";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 8;
 
-export default () => {
-  const [users, setUsers] = useState([]);
+const Tables = ({ data }) => {
+  const [users, setUsers] = useState(data || []);
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    fetch("https://dummyjson.com/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data.users))
-      .catch((error) => console.error(error));
-  }, []);
-  console.log(users);
 
-  const paginatedUsers = users.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  useEffect(() => {
+    if (!data) {
+      fetch("https://dummyjson.com/users")
+        .then((res) => res.json())
+        .then((data) => setUsers(data.users))
+        .catch((error) => console.error(error));
+    } else {
+      setUsers(data);
+    }
+  }, [data]);
+
+  const paginatedUsers = users.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
   const totalPages = Math.ceil(users.length / PAGE_SIZE);
 
   return (
@@ -38,15 +46,14 @@ export default () => {
                 <td className="pr-6 py-4 whitespace-nowrap">{item.username}</td>
                 <td className="pr-6 py-4 whitespace-nowrap">{item.role}</td>
                 <td className="pr-6 py-4 whitespace-nowrap">{item.phone}</td>
-
                 <td className="pr-6 py-4 whitespace-nowrap">{item.email}</td>
                 <td className="pr-6 py-4 whitespace-nowrap">
                   {item.address.country}
                 </td>
                 <td className="text-center whitespace-nowrap">
                   <span
-                    className={`px-8  py-2 rounded-md font-semibold text-xs ${
-                      item.status == "Active"
+                    className={`px-8 py-2 rounded-md font-semibold text-xs ${
+                      item.status === "Active"
                         ? "text-[#008767] font-bold bg-[#16c098]/50 border border-[#008767]"
                         : "text-[#df0404] bg-[#ffc5c5] border border-[#df0404]"
                     }`}
@@ -58,21 +65,14 @@ export default () => {
             ))}
           </tbody>
         </table>
-        <div className="flex justify-between mt-4">
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Previous
-          </button>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );
 };
+
+export default Tables;
