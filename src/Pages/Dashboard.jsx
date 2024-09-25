@@ -20,7 +20,7 @@ function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   const [filterTerm, setFilterTerm] = useState("");
 
-  // Fetch users data
+
   const fetchUsers = async () => {
     const res = await fetch(`https://dummyjson.com/users`);
     const data = await res.json();
@@ -39,16 +39,16 @@ function Dashboard() {
     setSearchTerm(e.target.value);
   };
 
-  // Determine which results to display based on search and filter terms
+ 
   const getFilteredResults = () => {
     if (!searchTerm && !filterTerm) {
-      // Show all users if no search or filter term
+   
       return searchResults;
     }
     
     return searchResults.filter(user => {
       const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesFilter = filterTerm ? user.role === filterTerm : true; // Assuming user.role holds the user type
+      const matchesFilter = filterTerm ? user.role === filterTerm : true; 
       return matchesSearch && matchesFilter;
     });
   };
