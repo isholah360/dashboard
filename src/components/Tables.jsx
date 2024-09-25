@@ -3,6 +3,8 @@ import Pagination from "./Pagination";
 
 const PAGE_SIZE = 8;
 
+const status = "Active"
+
 const Tables = ({ data }) => {
   const [users, setUsers] = useState(data || []);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,12 +55,12 @@ const Tables = ({ data }) => {
                 <td className="text-center whitespace-nowrap">
                   <span
                     className={`px-8 py-2 rounded-md font-semibold text-xs ${
-                      item.status === "Active"
+                      status === "Active"
                         ? "text-[#008767] font-bold bg-[#16c098]/50 border border-[#008767]"
                         : "text-[#df0404] bg-[#ffc5c5] border border-[#df0404]"
                     }`}
                   >
-                    {item.status}
+                    {status}
                   </span>
                 </td>
               </tr>

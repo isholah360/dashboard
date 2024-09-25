@@ -13,24 +13,47 @@ import Header from "../components/Header";
 import Status from "../components/Status";
 import Tables from "../components/Tables";
 // import Pagination from "../components/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
- const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [filterTerm, setFilterTerm] = useState("");
+
+  // Fetch users data
+  const fetchUsers = async () => {
+    const res = await fetch(`https://dummyjson.com/users`);
+    const data = await res.json();
+    setSearchResults(data.users || []);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleChange = (e) => {
+    setFilterTerm(e.target.value);
+  };
 
   const handleSearch = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    
-    if (term) {
-      fetch(`https://dummyjson.com/users/search?q=${term}`)
-        .then(res => res.json())
-        .then(data => setSearchResults(data.users || []));
-    } else {
-      setSearchResults([]);
-    }
+    setSearchTerm(e.target.value);
   };
+
+  // Determine which results to display based on search and filter terms
+  const getFilteredResults = () => {
+    if (!searchTerm && !filterTerm) {
+      // Show all users if no search or filter term
+      return searchResults;
+    }
+    
+    return searchResults.filter(user => {
+      const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesFilter = filterTerm ? user.role === filterTerm : true; // Assuming user.role holds the user type
+      return matchesSearch && matchesFilter;
+    });
+  };
+
+  const filteredResults = getFilteredResults();
   return (
     <div className="flex flex-row">
       <div className="flex">
@@ -64,24 +87,19 @@ function Dashboard() {
                 />
               </div>
 
-              <div className="w-[160px] relative p-2 flex flex-row bg-[#f9fbff] rounded-lg items-center  ">
-                <p className="text-sm w-[50px]">Sort by :</p>
-                <select className="ml-2 border-none outline-none bg-[#f9fbff] font-bold">
-                  <option>admin</option>
-                  <option>moderator</option>
-                  <option>user</option>
+              <div className="w-[180px] relative p-2 flex flex-row bg-[#f9fbff] rounded-lg items-center  ">
+                <p className="text-sm w-[200px]">Sort by:</p>
+                <select onChange={handleChange} value={filterTerm} className="ml-2 border-none outline-none bg-[#f9fbff] font-bold">
+                  <option value="">All</option>
+                  <option value="admin">Admin</option>
+                  <option value="moderator">Moderator</option>
+                  <option value="user">User</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {searchResults.length > 0 ? (
-            <Tables data={searchResults} />
-          ) : (
-            <Tables />
-          )}
-            {/* <Tables /> */}
-          {/* <Pagination /> */}
+          <Tables data={filteredResults} />
         </div>
       </div>
     </div>
